@@ -4,9 +4,9 @@ mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuMTExMTExMSIsImEiOiJjazhocjVwenMwMnh5M2twY
 function loadMap(initialCoordinates) {
     var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/ben1111111/ckazuk0kh054z1io9lc3ehub7',
         center: initialCoordinates, // Use the user's current location as the initial center
-        zoom: 14
+        zoom: 15.45
     });
 
     map.addControl(new mapboxgl.NavigationControl());
