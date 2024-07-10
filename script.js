@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuMTExMTExMSIsImEiOiJjazhocjVwenMwMnh5M2twYzl6cngwNW92In0.RKO2gVTlIs3FYXmoKrzVYQ'; // Replace this with your Mapbox Access Token
+/*mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuMTExMTExMSIsImEiOiJjazhocjVwenMwMnh5M2twYzl6cngwNW92In0.RKO2gVTlIs3FYXmoKrzVYQ'; // Replace this with your Mapbox Access Token
 
 // Function to initialize the map at the user's current location
 function loadMap(initialCoordinates) {
@@ -7,14 +7,22 @@ function loadMap(initialCoordinates) {
         style: 'mapbox://styles/ben1111111/ckazuk0kh054z1io9lc3ehub7',
         center: initialCoordinates, // Use the user's current location as the initial center
         zoom: 15.45
+    }); */
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoiYmVuMTExMTExMSIsImEiOiJjazhocjVwenMwMnh5M2twYzl6cngwNW92In0.RKO2gVTlIs3FYXmoKrzVYQ'; // Replace this with your actual Mapbox Access Token
+
+function loadMap(initialCoordinates) {
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/ben1111111/ckazuk0kh054z1io9lc3ehub7',
+        center: initialCoordinates,
+        zoom: 14
     });
 
     map.addControl(new mapboxgl.NavigationControl());
-
-    window.map = map; // Make map globally available
+    window.map = map;
 }
 
-// Get user's current location
 navigator.geolocation.getCurrentPosition(successLocation, errorLocation, { enableHighAccuracy: true });
 
 function successLocation(position) {
@@ -27,11 +35,10 @@ function errorLocation() {
 
 function submitDestination() {
     var destinationInput = document.getElementById('destination').value;
-    if (destinationInput === "") {
+    if (!destinationInput) {
         alert("Please enter a destination.");
         return;
     }
-
     fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(destinationInput)}.json?access_token=${mapboxgl.accessToken}`)
         .then(response => response.json())
         .then(data => {
@@ -71,11 +78,18 @@ function getRoute(start, end) {
                     'line-opacity': 0.75
                 }
             };
-            // Add or update the route on the map
+
             if (map.getSource('route')) {
                 map.getSource('route').setData(route);
             } else {
                 map.addLayer(routeLayer);
             }
+
+            displayDirections(data.routes[0]);
         });
+}
+
+function displayDirections(route) {
+    var instructions = route.legs[0].steps.map(step => `<div>${step.maneuver.instruction}</div>`).join('');
+    document.getElementById('directions-panel').innerHTML = instructions;
 }
